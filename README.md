@@ -1,2 +1,1 @@
-# nse-scripts
-Collection of NSE scripts
+A collection of my public NSE scripts.
