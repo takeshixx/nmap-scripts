@@ -152,6 +152,8 @@ Pre-scan script results:
 
 ## mop-discover.nse
 
+Check if the Maintenance Operation Protocol (MOP) is enabled on Cisco devices. Please refer to [this post](https://www.insinuator.net/2015/08/cisco-and-the-maintenance-operation-protocol-mop/) for further information.
+
 Checking if a device supports MOP is as easy as this:
 
 ```
@@ -159,7 +161,6 @@ nmap --script mop-discover.nse 192.168.1.1
 ```
 
 In case there is just layer 2 connectivity, the MAC address can be specified as follows:
-
 
 ```
 nmap --script mop-discover.nse --script-args target=01:02:03:04:05:06 -e eth0
@@ -169,24 +170,28 @@ nmap --script mop-discover.nse --script-args target=01:02:03:04:05:06 -e eth0
 
 ## ssl-heartbleed-dump.nse
 
-Discovers/Exploits Heartbleed/CVE-2014-0160. This script is basically like the Heartbleed detection script included in [official Nmap repositories](https://svn.nmap.org/nmap/scripts/ssl-heartbleed.nse) with the ability to dump the leaked memory to an outfile or print a hexdump with Nmap debug output.
+Discovers/Exploits Heartbleed (CVE-2014-0160). This script is basically like the Heartbleed detection script included in [official Nmap repositories](https://svn.nmap.org/nmap/scripts/ssl-heartbleed.nse) with the ability to dump the leaked memory to an outfile or print a hexdump by increasing Nmap's debug output.
 
-#### Check if a host is vulnerable
-This runs on every SSL, FTP, SMTP and/or XMPP port.
+Check if a host is vulnerable to Heartbleed (checks every SSL-enabled HTTP, FTP, SMTP and/or XMPP port):
+
 ```
-$ nmap --script ./ssl-heartbleed-dump.nse host.tld
+$ nmap --script ./ssl-heartbleed-dump.nse 192.168.1.1
 ```
-#### Dump leaked memory from a vulnerable host
-Dumping leaked memory is enabled by increasing Nmap's debug level via -d flag.
+
+Print out a hexdump of leaked memory by increasing Nmap's debug level with the -d flag:
+
 ```
-$ nmap -d --script=./ssl-heartbleed-dump.nse host.tld
+$ nmap -d --script=./ssl-heartbleed-dump.nse 192.168.1.1
 ```
-#### Dump leaked memory into an outfile
+
+Dump leaked memory into an outfile:
+
 ```
-$ nmap --script ./ssl-heartbleed-dump.nse --script-args 'ssl-heartbleed-dump.dumpfile=/tmp/heartbleed.dump' host.tld
+$ nmap --script ./ssl-heartbleed-dump.nse --script-args 'ssl-heartbleed-dump.dumpfile=/tmp/heartbleed.dump' 192.168.1.1
 ```
-#### Run ssl-heartbleed.nse against every port
-Force the script to run on each port, regardless if the servie was detected or not.
+
+Run ssl-heartbleed-dump.nse against every open port, regardless if the servie was detected or not:
+
 ```
-$ nmap --script +./ssl-heartbleed-dump.nse host.tld
+$ nmap --script +./ssl-heartbleed-dump.nse 192.168.1.1
 ```
