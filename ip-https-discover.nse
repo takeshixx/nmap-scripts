@@ -6,7 +6,6 @@ local shortport = require 'shortport'
 local sslcert = require 'sslcert'
 
 description = [[
-tl;dr:
 IP-HTTPS sends Teredo related IPv6 packets over an IPv4-based HTTPS session.
 
 Checks if the IP over HTTPS (IP-HTTPS) Tunneling Protocol [1] is supported. This
@@ -50,27 +49,35 @@ action = function(host, port)
   if host.targetname then
     target = host.targetname
   else
-    -- If there is no targetname, take the subject commonName from the SSL cert.
-    local status,cert = sslcert.getCertificate(host,port)
-    if not status then
-      stdnse.debug1("Could not retrieve SSL certificate")
-      return
+    if not string.match(stdnse.get_hostname(host), '%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?') then
+        -- If stdnse.get_hostname() returns a hostname, use it as the target.
+        target = stdnse.get_hostname(host)
+    else
+      -- If stdnse.get_hostname() returns an IP address, try to get the hostname
+      -- from the SSL certificate.
+      local status,cert = sslcert.getCertificate(host,port)
+      if not status then
+        stdnse.debug1('Could not retrieve SSL certificate')
+        return
+      end
+      target = cert.subject['commonName']
     end
-    target = cert.subject['commonName']
   end
+
   if not target then
     return
   end
+
   local socket, response = comm.tryssl(host,port,
     string.format(request, target),
     { timeout=3000, lines=4 })
   if not socket then
-    stdnse.debug1("Problem establishing connection: %s", response)
-    return nil
+    stdnse.debug1('Problem establishing connection: %s', response)
+    return
   end
   socket:close()
 
-  if string.match(response, 'HTTP/1.1 200') then
+  if string.match(response, 'HTTP/1.1 200%s+.+HTTPAPI/2.0') then
     return true, 'IP-HTTPS is supported. This indicates that this host supports Microsoft DirectAccess.'
   end
 end
