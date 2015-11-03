@@ -2,6 +2,7 @@
 
 The following scripts are available in official Nmap repositories:
 
+* ip-https-discover.nse
 * knx-gateway-discover.nse
 * knx-gateway-info.nse
 * sstp-discover.nse
