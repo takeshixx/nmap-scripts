@@ -113,6 +113,7 @@ local knxParseDescriptionResponse = function(knxMessage)
   local _, knx_dib_dev_mac = bin.unpack('>A6', knxMessage, _)
   knx_dib_dev_mac = stdnse.format_mac(knx_dib_dev_mac)
   local _, knx_dib_dev_friendly_name = bin.unpack('>A30', knxMessage, _)
+  knx_dib_dev_friendly_name = knx_dib_dev_friendly_name:gsub('\x00','')
 
   local knx_supp_svc_families = {}
   local _, knx_supp_svc_families_structure_length = bin.unpack('>C', knxMessage, _)
