@@ -20,19 +20,19 @@ portrule = shortport.port_or_service(3671, "efcp", "udp")
 
 --
 --@output
--- 3671/udp open|filtered efcp
--- | knx-gateway-info:
--- |   Body:
--- |     DIB_DEV_INFO:
--- |       KNX address: 15.15.255
--- |       Decive serial: 00ef2650065c
+-- 3671/udp open  efcp    KNXnet/IP Gateway
+-- | knx-gateway-info: 
+-- |   Body: 
+-- |     DIB_DEV_INFO: 
+-- |       KNX address: 1.2.200
+-- |       Decive serial: 00e70880d151
 -- |       Multicast address: 0.0.0.0
 -- |       Device friendly name: IP-Viewer
--- |     DIB_SUPP_SVC_FAMILIES:
--- |       KNXnet/IP Core version 1
--- |       KNXnet/IP Device Management version 1
--- |       KNXnet/IP Tunnelling version 1
--- |_      KNXnet/IP Object Server version 1
+-- |     DIB_SUPP_SVC_FAMILIES: 
+-- |       KNXnet/IP Core
+-- |       KNXnet/IP Device Management
+-- |       KNXnet/IP Tunnelling
+-- |_      KNXnet/IP Object Server
 --
 
 local knxServiceFamilies = {
