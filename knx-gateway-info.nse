@@ -122,16 +122,15 @@ local knxParseDescriptionResponse = function(knxMessage)
 
   local fam_meta = {
     __tostring = function (self)
-      return ("%s version %d"):format(
-        knxServiceFamilies[self.service_id] or self.service_id,
-        self.Version
-        )
+      return ("%s"):format(
+        knxServiceFamilies[self.service_id] or self.service_id)
     end
   }
-
-  for i=0,(knx_total_length-_),2 do
+  
+  local svc_families_length = knx_supp_svc_families_structure_length - 2
+  for i=0,(svc_families_length),2 do
     local family = {}
-    _, family.service_id, family.Version = bin.unpack('CC', knxMessage, _)
+    _, family.service_id, _ = bin.unpack('CC', knxMessage, _)
     setmetatable(family, fam_meta)
     knx_supp_svc_families[#knx_supp_svc_families+1] = family
   end
