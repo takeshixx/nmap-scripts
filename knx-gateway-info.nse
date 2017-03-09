@@ -73,8 +73,8 @@ local knxQuery = function(ip_address, port)
     0x000e, -- Total length
     0x08, -- Structure length
     0x01, -- Host protocol
-    ipOps.todword(ip_address),
-    port
+    ipOps.todword('0.0.0.0'),
+    0
   )
 end
 
